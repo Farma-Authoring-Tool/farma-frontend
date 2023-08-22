@@ -1,11 +1,31 @@
-import React from 'react'
+import { useState, useEffect } from 'react';
+import { getLos } from '../../../services/Api'; 
 import { Button } from 'react-bootstrap';
 import Navbar from "../../layout/Navbar/Navbar";
 import { HiPlus } from "react-icons/hi";
 import './Lo.css';
 import SidebarMenu from '../../layout/SidebarMenu/SidebarMenu';
 
+interface LoData {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+}
+
 function Lo() {
+  const [los, setLos] = useState<LoData[]>([]);
+
+  useEffect(() => {
+    getLos()
+      .then(response => {
+        setLos(response.data);
+      })
+      .catch(error => {
+        console.error('Erro ao buscar LOs:', error);
+      });
+  }, []);
+
   return (
     <>
       <Navbar />
@@ -22,32 +42,15 @@ function Lo() {
           </div>
 
           <div className='row'>
-            <div className="col card border-success oa d-flex justify-content-center align-items-center">
-              <div className="card-body text-center">
-                {/* <img src="..." className="card-img-top" alt="..."> */}
-                <h5 className="card-title">OA Título</h5>
-                <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" className="btn btn-success">Ver Mais</a>
+            {los.map(lo => (
+              <div key={lo.id} className="col card border-success oa d-flex justify-content-center align-items-center">
+                <div className="card-body text-center">
+                  <h5 className="card-title">{lo.title}</h5>
+                  <p className="card-text">{lo.description}</p>
+                  <a href={`/${lo.id}`} className="btn btn-success">Ver Mais</a>
+                </div>
               </div>
-            </div>
-
-            <div className="col card border-success oa d-flex justify-content-center align-items-center">
-              <div className="card-body text-center">
-                {/* <img src="..." className="card-img-top" alt="..."> */}
-                <h5 className="card-title">OA Título</h5>
-                <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" className="btn btn-success">Ver Mais</a>
-              </div>
-            </div>
-
-            <div className="col card border-success oa d-flex justify-content-center align-items-center">
-              <div className="card-body text-center">
-                {/* <img src="..." className="card-img-top" alt="..."> */}
-                <h5 className="card-title">OA Título</h5>
-                <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" className="btn btn-success">Ver Mais</a>
-              </div>
-            </div>
+            ))}
           </div>
 
           <div className="d-grid gap-2 d-md-flex justify-content-md-end p-2">

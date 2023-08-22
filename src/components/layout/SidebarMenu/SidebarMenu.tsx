@@ -2,7 +2,7 @@ import React from "react"
 import "./SidebarMenu.css";
 import { FaHouse, FaFolder } from "react-icons/fa6";
 
-function SidebarMenu({ isSidebarOpen }) {
+function SidebarMenu() {
   return (
     <>
       <div className="bg-light border-end" id="sidebar">
