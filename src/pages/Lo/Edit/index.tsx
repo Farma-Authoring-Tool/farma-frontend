@@ -55,7 +55,7 @@ function LoEdit() {
                 {...form.getInputProps('title')}
                 styles={{
                     input: {
-                        borderBottom: '2px solid lime', 
+                        borderBottom: '2px solid dimond', 
                         width: '600px',
                         borderTop: 'none',
                         borderRight: 'none',
@@ -71,7 +71,7 @@ function LoEdit() {
                 {...form.getInputProps('description')}
                 styles={{
                     input: {
-                      borderBottom: '2px solid lime', 
+                      borderBottom: '2px solid dimond', 
                       width: '600px',
                       borderTop: 'none',
                       borderRight: 'none',
@@ -88,7 +88,7 @@ function LoEdit() {
                 {...form.getInputProps('image')}
                 styles={{
                     input: {
-                      border: '2px solid lime', 
+                      border: '2px solid dimond', 
                       width: '600px',
                       height: '100px',
                       padding: '4px',

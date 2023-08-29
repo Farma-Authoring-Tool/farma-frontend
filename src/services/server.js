@@ -4,7 +4,7 @@ const { getLos, createLo, updateLo, deleteLo } = require('./Api');
 
 const app = express();
 
-app.use(cors());
+app.use(cors({ origin: 'http://localhost:8000' }));
 
 app.get('/los', async (req, res) => {
   try {
@@ -30,7 +30,8 @@ app.post('/los', async (req, res) => {
 });
 
 
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
+
 app.listen(PORT, () => {
   console.log(`Servidor iniciado na porta ${PORT}`);
 });

@@ -1,25 +1,48 @@
 import { useState, useEffect } from 'react';
 import { useForm } from '@mantine/form';
-import { createLo } from '../../../services/Api'; 
-import { Button, Box, TextInput, Code, Group, Text, Divider, Card, FileInput, CloseButton } from '@mantine/core';
+// import { createLo } from '../../../services/Api'; 
+import { Button, Box, TextInput, Code, Group, Text, Divider, Card, CloseButton } from '@mantine/core';
 import AppLayout from '../../Layouts/AppLayout';
 import { FaAngleRight, FaPaperPlane, FaX } from 'react-icons/fa6';
 import { useNavigate } from "react-router-dom";
+const API_BASE_URL = 'https://example.com/api';
+import axios from 'axios'; 
 
-function LoCreate() {
+async function createLo(title: string, description: string, image: string) {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/los`, {
+      title,
+      description,
+      image,
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error('Erro ao criar o Objeto de aprendizagem');
+  }
+}
 
+  function LoCreate() {
     const [submittedValues, setSubmittedValues] = useState('');
     const navigate = useNavigate();
     const form = useForm({
-    
-    
-      transformValues: (values: { title: any; description: any; image: any; }) => ({
+      transformValues: (values) => ({
         title: String(values.title) || '',
         description: String(values.description) || '',
         image: String(values.image) || '',
       }),
     });
-    
+
+    const handleSubmit = async (values: any) => {
+      try {
+        await createLo(values.title, values.description, values.image);
+  
+        setSubmittedValues(JSON.stringify(values, null, 2));
+      } catch (error) {
+        console.error('Erro ao criar o Objeto de aprendizagem:', error);
+      }
+    };
+
+
   return (
     <>
       <AppLayout >   
@@ -48,14 +71,14 @@ function LoCreate() {
           </Group>
             
           <Box>
-            <form onSubmit={form.onSubmit((values: any) => setSubmittedValues(JSON.stringify(values, null, 2)))} >
+            <form onSubmit={(event) => { event.preventDefault(); handleSubmit(form.values) }}>
               <TextInput
                 label="Título"
                 placeholder="título do oa ..."
                 {...form.getInputProps('title')}
                 styles={{
                     input: {
-                        borderBottom: '2px solid lime', 
+                        borderBottom: '2px solid dimond', 
                         width: '600px',
                         borderTop: 'none',
                         borderRight: 'none',
@@ -71,7 +94,7 @@ function LoCreate() {
                 {...form.getInputProps('description')}
                 styles={{
                     input: {
-                      borderBottom: '2px solid lime', 
+                      borderBottom: '2px solid dimond', 
                       width: '600px',
                       borderTop: 'none',
                       borderRight: 'none',
@@ -88,7 +111,7 @@ function LoCreate() {
                 {...form.getInputProps('image')}
                 styles={{
                     input: {
-                      border: '2px solid lime', 
+                      border: '2px solid dimond', 
                       width: '600px',
                       height: '100px',
                       padding: '4px',
@@ -111,10 +134,10 @@ function LoCreate() {
               /> */}
 
               <Box style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px' }}>
-                <Button type="submit" color='lime.5'>
-                  Criar OA 
-                  <FaPaperPlane style={{ marginLeft: '4px' }} />
-                </Button>
+              <Button type="submit" color="lime.5">
+                Criar OA
+                <FaPaperPlane style={{ marginLeft: '4px' }} />
+              </Button>
               </Box>
             </form>
 
