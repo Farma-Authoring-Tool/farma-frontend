@@ -23,7 +23,7 @@ const router = createBrowserRouter([
         element: <LoCreate />,
       },
       {
-        path: ":oaId",
+        path: ":id",
         element: <Outlet />,
         children: [
           // {

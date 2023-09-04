@@ -1,25 +1,55 @@
 import { useState, useEffect } from 'react';
 import { useForm } from '@mantine/form';
-import { updateLo } from '../../../services/Api'; 
+import { useUpdateLo, useGetLo } from '../../../services/Api';
 import { Button, Box, TextInput, Code, Group, Text, Divider, Card, CloseButton } from '@mantine/core';
 import AppLayout from '../../Layouts/AppLayout';
 import { FaAngleRight, FaPaperPlane, FaX } from 'react-icons/fa6';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from 'react-router-dom';
 
 function LoEdit() {
+  const { id } = useParams();
+  const [submittedValues, setSubmittedValues] = useState('');
+  const navigate = useNavigate();
 
-    const [submittedValues, setSubmittedValues] = useState('');
-    const navigate = useNavigate();
-    const form = useForm({
-    
-    
-      transformValues: (values: { title: any; description: any; image: any; }) => ({
-        title: String(values.title) || '',
-        description: String(values.description) || '',
-        image: String(values.image) || '',
-      }),
-    });
-    
+  const form = useForm({
+    initialValues: { title: '', description: '', image: '' },
+    transformValues: (values) => ({
+      title: String(values.title) || '',
+      description: String(values.description) || '',
+      image: String(values.image) || '',
+    }),
+  });
+
+  const updateLo = useUpdateLo();
+  const { lo, isLoading, error } = useGetLo(id);
+
+  useEffect(() => {
+    if (lo) {
+      form.setValues({
+        title: lo.title,
+        description: lo.description,
+        image: lo.image,
+      });
+    }
+  }, [lo]);
+
+  async function handleSubmit() {
+    try {
+      await updateLo(id, form.values); 
+      navigate('/oa');
+    } catch (error) {
+      console.error('Erro ao editar o Objeto de Aprendizagem:', error);
+    }
+  }
+
+  if (isLoading) {
+    return <p>Carregando...</p>;
+  }
+
+  if (error) {
+    return <p>Ocorreu um erro ao buscar os detalhes do OA.</p>;
+  }
+
   return (
     <>
       <AppLayout >   

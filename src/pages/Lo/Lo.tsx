@@ -1,53 +1,47 @@
-import { useState, useEffect } from 'react';
-import { getLos } from '../../services/Api'; 
+import React, { useState } from 'react';
+import { useGetLos, useDeleteLo } from '../../services/Api'; // Importe useDeleteLo
 import { HiPlus } from "react-icons/hi";
 import './Lo.css';
 import AppLayout from '../Layouts/AppLayout';
-import { Card, Divider, Group, Input, Menu, Text, Button, Image, Accordion, Box, Table } from '@mantine/core';
-import { FaAngleRight, FaChevronUp, FaMagnifyingGlass, FaPenToSquare, FaTrash } from 'react-icons/fa6';
-import oa from "../../assets/oa.png";
+import { Divider, Group, Input, Text, Button, Box, Table } from '@mantine/core';
+import { FaAngleRight, FaEye, FaMagnifyingGlass, FaPenToSquare, FaTrash } from 'react-icons/fa6';
 import { Link } from 'react-router-dom';
 
-interface LoData {
-  id: number;
-  title: string;
-  description: string;
-  image: string;
-}
-
 function Lo() {
-  const [los, setLos] = useState<LoData[]>([]);
-  const [selectedLosId, setSelectedLosId] = useState<number | null>(null); 
+  const { los, error } = useGetLos();
+  const [isDeleting, setDeleting] = useState(false);
+  const deleteLo = useDeleteLo();
 
-  useEffect(() => {
-    getLos()
-    .then(response => {
-      setLos(response.data);
-      })
-      .catch(error => {
-        console.error('Erro ao buscar LOs:', error);
-      });
-  }, []);
-  
+  const handleDelete = async (id: any) => {
+    try {
+      setDeleting(true);
+      await deleteLo(id);
+      navigate('/oa');
+    } catch (error) {
+      console.error('Erro ao excluir LO:', error);
+      setDeleting(false);
+    }
+  };
 
-  const rows = los.map((lo) => (
+  const rows = los?.map((lo: any) => (
     <tr key={lo.id}>
       <td>{lo.id}</td>
       <td>{lo.title}</td>
       <td>{lo.description}</td>
       <td>
         <Box style={{ display: 'flex', alignItems: 'center' }}>
-            <Link to={`/oa/${lo.id}/editar`}>
-                <FaPenToSquare  color="ocean-blue" />
-            </Link>
-            <Link to={`/oa/${lo.id}/deletar`}
-              style={{ marginLeft: '10px' }} >
-                <FaTrash color="red" />
-            </Link>
+          <Link to={`/oa/${lo.id}`}>
+            <FaEye color="green" />
+          </Link>
+          <Link to={`/oa/${lo.id}/editar`} style={{ marginLeft: '10px' }}>
+            <FaPenToSquare color="ocean-blue" />
+          </Link>
+          <FaTrash onClick={() => handleDelete(lo.id)} disabled={isDeleting} color="red" style={{ marginLeft: '10px' }} />
         </Box>
       </td>
     </tr>
   ));
+
 
   return (
     <>
@@ -66,8 +60,8 @@ function Lo() {
         />
 
         <Group position="center" mt={30}>
-          <Table highlightOnHover>
-              <thead>
+          <Table striped={true} highlightOnHover>
+            <thead>
               <tr>
                 <th>#</th>
                 <th>Título</th>
@@ -80,30 +74,22 @@ function Lo() {
         </Group>
 
         <div style={{ position: "fixed", bottom: "30px", right: "30px" }}>
-          <Menu offset={4} withArrow width={200} shadow="md">
-            <Menu.Target>
-              <Button
-                size="md" 
-                style={{
-                  width: "50px",
-                  height: "50px",
-                  borderRadius: "50%",
-                  backgroundColor: "red",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <HiPlus size={24} />
-              </Button>
-            </Menu.Target>
-
-            <Menu.Dropdown>
-              <Menu.Item icon={<HiPlus />} component="a" href="/oa/novo" >
-                Criar um novo OA
-              </Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
+          <Link to="/oa/novo">
+            <Button
+              size="md" 
+              style={{
+                width: "50px",
+                height: "50px",
+                borderRadius: "50%",
+                backgroundColor: "red",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <HiPlus size={24} />
+            </Button>
+          </Link>
         </div>
         
       </AppLayout>

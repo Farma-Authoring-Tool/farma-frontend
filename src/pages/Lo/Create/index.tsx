@@ -1,47 +1,40 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useForm } from '@mantine/form';
-// import { createLo } from '../../../services/Api'; 
 import { Button, Box, TextInput, Code, Group, Text, Divider, Card, CloseButton } from '@mantine/core';
 import AppLayout from '../../Layouts/AppLayout';
-import { FaAngleRight, FaPaperPlane, FaX } from 'react-icons/fa6';
-import { useNavigate } from "react-router-dom";
-const API_BASE_URL = 'https://example.com/api';
-import axios from 'axios'; 
+import { FaAngleRight, FaPaperPlane } from 'react-icons/fa6';
+import { useNavigate } from 'react-router-dom';
+import { useCreateLo } from '../../../services/Api';
 
-async function createLo(title: string, description: string, image: string) {
-  try {
-    const response = await axios.post(`${API_BASE_URL}/los`, {
-      title,
-      description,
-      image,
-    });
-    return response.data;
-  } catch (error) {
-    throw new Error('Erro ao criar o Objeto de aprendizagem');
+function LoCreate() {
+  const [submittedValues, setSubmittedValues] = useState('');
+  const navigate = useNavigate();
+  const form = useForm({
+    transformValues: (values) => ({
+      title: String(values.title) || '',
+      description: String(values.description) || '',
+      image: String(values.image) || '',
+    }),
+  });
+
+  const createLo = useCreateLo();
+
+  async function handleSubmit() {
+    try {
+      const { title, description, image } = form.values;
+      await createLo({
+        title,
+        description,
+        image,
+      });
+
+      form.reset();
+      navigate('/oa');
+      // setSubmittedValues(JSON.stringify({ title, description, image }, null, 2));
+    } catch (error) {
+      console.error('Erro ao criar o Objeto de aprendizagem:', error);
+    }
   }
-}
-
-  function LoCreate() {
-    const [submittedValues, setSubmittedValues] = useState('');
-    const navigate = useNavigate();
-    const form = useForm({
-      transformValues: (values) => ({
-        title: String(values.title) || '',
-        description: String(values.description) || '',
-        image: String(values.image) || '',
-      }),
-    });
-
-    const handleSubmit = async (values: any) => {
-      try {
-        await createLo(values.title, values.description, values.image);
-  
-        setSubmittedValues(JSON.stringify(values, null, 2));
-      } catch (error) {
-        console.error('Erro ao criar o Objeto de aprendizagem:', error);
-      }
-    };
-
 
   return (
     <>
@@ -71,7 +64,7 @@ async function createLo(title: string, description: string, image: string) {
           </Group>
             
           <Box>
-            <form onSubmit={(event) => { event.preventDefault(); handleSubmit(form.values) }}>
+          <form onSubmit={(event) => { event.preventDefault(); handleSubmit() }}>
               <TextInput
                 label="Título"
                 placeholder="título do oa ..."

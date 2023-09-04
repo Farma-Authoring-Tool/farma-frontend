@@ -17,6 +17,19 @@ app.get('/los', async (req, res) => {
   }
 });
 
+app.get('/los/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const response = await getLo(id);
+    const loDetails = response.data;
+    res.json(loDetails);
+  } catch (error) {
+    console.error('Erro ao buscar detalhes do LO:', error);
+    res.status(500).json({ error: 'Erro ao buscar detalhes do LO' });
+  }
+});
+
+
 app.post('/los', async (req, res) => {
   try {
     const newLoData = req.body;
@@ -26,6 +39,31 @@ app.post('/los', async (req, res) => {
   } catch (error) {
     console.error('Erro ao criar LO:', error);
     res.status(500).json({ error: 'Erro ao criar LO' });
+  }
+});
+
+app.put('/los/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const updatedLoData = req.body;
+    const response = await updateLo(id, updatedLoData);
+    const updatedLo = response.data;
+    res.json(updatedLo);
+  } catch (error) {
+    console.error('Erro ao atualizar LO:', error);
+    res.status(500).json({ error: 'Erro ao atualizar LO' });
+  }
+});
+
+app.delete('/los/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const response = await deleteLo(id);
+    const deletedLo = response.data;
+    res.json(deletedLo);
+  } catch (error) {
+    console.error('Erro ao excluir LO:', error);
+    res.status(500).json({ error: 'Erro ao excluir LO' });
   }
 });
 
