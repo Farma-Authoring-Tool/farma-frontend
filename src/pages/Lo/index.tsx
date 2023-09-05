@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import { useGetLos, useDeleteLo } from '../../services/Api'; // Importe useDeleteLo
 import { HiPlus } from "react-icons/hi";
-import './Lo.css';
+import './index.css';
 import AppLayout from '../Layouts/AppLayout';
 import { Divider, Group, Input, Text, Button, Box, Table } from '@mantine/core';
 import { FaAngleRight, FaEye, FaMagnifyingGlass, FaPenToSquare, FaTrash } from 'react-icons/fa6';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+
 
 function Lo() {
   const { los, error } = useGetLos();
   const [isDeleting, setDeleting] = useState(false);
   const deleteLo = useDeleteLo();
+  const navigate = useNavigate();
 
   const handleDelete = async (id: any) => {
     try {

@@ -3,7 +3,7 @@ import { useForm } from '@mantine/form';
 import { useUpdateLo, useGetLo } from '../../../services/Api';
 import { Button, Box, TextInput, Code, Group, Text, Divider, Card, CloseButton } from '@mantine/core';
 import AppLayout from '../../Layouts/AppLayout';
-import { FaAngleRight, FaPaperPlane, FaX } from 'react-icons/fa6';
+import { FaAngleRight, FaPaperPlane } from 'react-icons/fa6';
 import { useNavigate, useParams } from 'react-router-dom';
 
 function LoEdit() {
@@ -35,6 +35,7 @@ function LoEdit() {
 
   async function handleSubmit() {
     try {
+      console.log('aaaaaa');
       await updateLo(id, form.values); 
       navigate('/oa');
     } catch (error) {
@@ -64,7 +65,7 @@ function LoEdit() {
         <Divider />
   
         <Card mt={30} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <Group w={'100%'} justify="space-between" alignItems="center">
+          <Group w={'100%'} style={{ justifyContent:"space-between",  alignItems:"center" }} >
             <Box style={{ marginLeft: 'auto' }}>
               <Text sx={{ fontFamily: 'sans-serif' }} fz="xl" ta="center" color="dimmed">
                   Titulo OA
@@ -78,7 +79,8 @@ function LoEdit() {
           </Group>
             
           <Box>
-            <form onSubmit={form.onSubmit((values: any) => setSubmittedValues(JSON.stringify(values, null, 2)))} >
+            
+            <form onSubmit={(event) => { event.preventDefault(); handleSubmit()}} >
               <TextInput
                 label="Título"
                 placeholder="título do oa ..."

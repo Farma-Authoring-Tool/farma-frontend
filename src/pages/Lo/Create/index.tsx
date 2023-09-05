@@ -50,7 +50,7 @@ function LoCreate() {
         <Divider />
   
         <Card mt={30} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <Group w={'100%'} justify="space-between" alignItems="center">
+          <Group w={'100%'} style={{ justifyContent:"space-between",  alignItems:"center" }}>
             <Box style={{ marginLeft: 'auto' }}>
               <Text sx={{ fontFamily: 'sans-serif' }} fz="xl" ta="center" color="dimmed">
                   Novo OA

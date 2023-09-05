@@ -47,7 +47,7 @@ export const useUpdateLo = () => {
   const updateLo = async (id: any, updatedLoData: any) => {
     try {
       const response = await fetch(`${API_BASE_URL}/los/${id}`, {
-        method: 'PUT',
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
