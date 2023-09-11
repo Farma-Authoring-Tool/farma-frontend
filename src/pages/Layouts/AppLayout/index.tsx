@@ -1,13 +1,13 @@
 import React from "react";
 import { AppShell, Box, Burger, Divider, Flex, Header, Image, Navbar, Text, Title } from "@mantine/core";
 import { ReactNode, useState } from "react";
-import { FaRightToBracket, FaCircleUser, FaBoxArchive, FaPeopleGroup } from "react-icons/fa6";
+import { FaCircleUser, FaBoxArchive, FaPeopleGroup } from "react-icons/fa6";
 import farmaLogo from "../../../assets/farma.png";
 
 import useStyles from "./styles";
 // import i18n from "@/lang";
 
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 interface AppLayoutProps {
     children: ReactNode;

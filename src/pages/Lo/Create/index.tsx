@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCreateLo } from '../../../services/Api';
 
 function LoCreate() {
-  const [submittedValues, setSubmittedValues] = useState('');
+  const [submittedValues] = useState('');
   const navigate = useNavigate();
   const form = useForm({
     transformValues: (values) => ({

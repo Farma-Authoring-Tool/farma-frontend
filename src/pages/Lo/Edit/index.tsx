@@ -1,14 +1,13 @@
-import { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from '@mantine/form';
 import { useUpdateLo, useGetLo } from '../../../services/Api';
-import { Button, Box, TextInput, Code, Group, Text, Divider, Card, CloseButton } from '@mantine/core';
+import { Button, Box, TextInput, Group, Text, Divider, Card, CloseButton } from '@mantine/core';
 import AppLayout from '../../Layouts/AppLayout';
 import { FaAngleRight, FaPaperPlane } from 'react-icons/fa6';
 import { useNavigate, useParams } from 'react-router-dom';
 
 function LoEdit() {
   const { id } = useParams();
-  const [submittedValues, setSubmittedValues] = useState('');
   const navigate = useNavigate();
 
   const form = useForm({
@@ -23,19 +22,9 @@ function LoEdit() {
   const updateLo = useUpdateLo();
   const { lo, isLoading, error } = useGetLo(id);
 
-  useEffect(() => {
-    if (lo) {
-      form.setValues({
-        title: lo.title,
-        description: lo.description,
-        image: lo.image,
-      });
-    }
-  }, [lo]);
-
   async function handleSubmit() {
     try {
-      console.log('aaaaaa');
+      console.log(form.values); // Verifique os valores dos campos no console
       await updateLo(id, form.values); 
       navigate('/oa');
     } catch (error) {
@@ -43,6 +32,17 @@ function LoEdit() {
     }
   }
 
+  useEffect(() => {
+    if (lo) {
+      form.setValues((prevValues) => ({
+        ...prevValues,
+        title: lo.title,
+        description: lo.description,
+        image: lo.image,
+      }));
+    }
+  }, [lo]);
+  
   if (isLoading) {
     return <p>Carregando...</p>;
   }
@@ -72,7 +72,6 @@ function LoEdit() {
               </Text>
             </Box>
 
-
             <Box style={{ marginLeft: 'auto' }}>
                 <CloseButton title="Close popover" size="xl" color="red" iconSize={20} onClick={() => navigate("/oa")} />
             </Box>
@@ -87,7 +86,7 @@ function LoEdit() {
                 {...form.getInputProps('title')}
                 styles={{
                     input: {
-                        borderBottom: '2px solid dimond', 
+                        borderBottom: '2px solid diamond',
                         width: '600px',
                         borderTop: 'none',
                         borderRight: 'none',
@@ -103,13 +102,14 @@ function LoEdit() {
                 {...form.getInputProps('description')}
                 styles={{
                     input: {
-                      borderBottom: '2px solid dimond', 
+                      borderBottom: '2px solid diamond',
                       width: '600px',
                       borderTop: 'none',
                       borderRight: 'none',
                       borderLeft: 'none',
                       borderRadius: '0px',
                     },
+                  
                 }}
               />
 
@@ -120,11 +120,12 @@ function LoEdit() {
                 {...form.getInputProps('image')}
                 styles={{
                     input: {
-                      border: '2px solid dimond', 
+                      border: '2px solid diamond',
                       width: '600px',
                       height: '100px',
                       padding: '4px',
                     },
+                    
                 }}
               />
             
@@ -135,8 +136,6 @@ function LoEdit() {
                 </Button>
               </Box>
             </form>
-
-            {submittedValues && <Code block>{submittedValues}</Code>}
           </Box>
         </Card>
       </AppLayout>

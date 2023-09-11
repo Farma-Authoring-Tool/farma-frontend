@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useGetLo } from '../../services/Api'; // Importe useDeleteLo
 import { HiPlus } from "react-icons/hi";
 import AppLayout from '../Layouts/AppLayout';
-import { Divider, Group, Input, Text, Button, Box, Table } from '@mantine/core';
-import { FaAngleRight, FaEye, FaMagnifyingGlass, FaPenToSquare, FaTrash } from 'react-icons/fa6';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Divider, Group, Text, Button } from '@mantine/core';
+import { FaAngleRight } from 'react-icons/fa6';
+import { Link, useParams } from 'react-router-dom';
 
 
 function LoShow() {
   const { id } = useParams();
-  const { lo, error } = useGetLo(id);
+  const { lo } = useGetLo(id);
   
  
   return (
