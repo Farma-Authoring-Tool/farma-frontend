@@ -1,0 +1,19 @@
+.oa {
+    width: 18rem;
+    margin: 2rem;
+}
+
+.custom-icon-button {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    font-size: 24px;
+    width: 40px;
+    height: 40px;
+}
+
+.main {
+    padding-top: 2rem;
+    padding-left: 15px;
+    padding-right: 15px;
+}
