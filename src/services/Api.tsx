@@ -16,7 +16,6 @@ export const useGetLo = (id: BigInteger) => {
 
 export const useGetLos = () => {
   const { data: los, error } = useSWR(`${API_BASE_URL}/los`, fetcher);
-
   return {
     los,
     isLoading: !error && !los,

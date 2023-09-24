@@ -1,30 +1,21 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useForm } from '@mantine/form';
-import { useUpdateLo, useGetLo } from '../../../services/Api';
+import { useUpdateLo } from '../../../services/Api';
 import { Button, Box, TextInput, Group, Text, Divider, Card, CloseButton } from '@mantine/core';
 import AppLayout from '../../Layouts/AppLayout';
 import { FaAngleRight, FaPaperPlane } from 'react-icons/fa6';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Lo } from '../../../types/Lo';
+import api from '../../../services/axios';
 
 function LoEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
-
-  const form = useForm({
-    initialValues: { title: '', description: '', image: '' },
-    transformValues: (values) => ({
-      title: String(values.title) || '',
-      description: String(values.description) || '',
-      image: String(values.image) || '',
-    }),
-  });
-
   const updateLo = useUpdateLo();
-  const { lo, isLoading, error } = useGetLo(id);
+  const [isLoading, setIsLoading] = useState(true)
 
   async function handleSubmit() {
     try {
-      console.log(form.values); // Verifique os valores dos campos no console
       await updateLo(id, form.values); 
       navigate('/oa');
     } catch (error) {
@@ -32,24 +23,39 @@ function LoEdit() {
     }
   }
 
+  const initializeForm = useCallback(async () => {
+    const response = await api.get<Lo>(`/los/${id}`);
+    const lo = response.data
+
+    form.setValues((prevValues) => ({
+      ...prevValues,
+      title: lo.title,
+      description: lo.description,
+      image: lo.image,
+    }));
+
+    setIsLoading(false)
+  }, [])
+
   useEffect(() => {
-    if (lo) {
-      form.setValues((prevValues) => ({
-        ...prevValues,
-        title: lo.title,
-        description: lo.description,
-        image: lo.image,
-      }));
-    }
-  }, [lo]);
-  
+    initializeForm()
+  }, [initializeForm]) 
+
+  const form = useForm({
+    transformValues: (values) => ({
+      title: String(values.title) || '',
+      description: String(values.description) || '',
+      image: String(values.image) || '',
+    }),
+  });
+
   if (isLoading) {
     return <p>Carregando...</p>;
   }
 
-  if (error) {
-    return <p>Ocorreu um erro ao buscar os detalhes do OA.</p>;
-  }
+  // if (error) {
+  //   return <p>Ocorreu um erro ao buscar os detalhes do OA.</p>;
+  // }
 
   return (
     <>
@@ -91,7 +97,7 @@ function LoEdit() {
                         borderTop: 'none',
                         borderRight: 'none',
                         borderLeft: 'none',
-                        borderRadius: '0px',
+                        borderRadius: '0px'
                     },
                 }}
               />
